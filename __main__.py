@@ -104,7 +104,55 @@ while not isDone.done:
 
 
     except:
-        pass
+        print("failed")
+        time.sleep(0.5)
+
+        try:
+            driver.get(path)
+            time.sleep(1)
+            driver.find_element_by_class_name("typing-type-here").send_keys(trans)
+            time.sleep(0.1)
+            driver.find_element_by_class_name("next-icon").click()
+            time.sleep(0.1)
+            driver.find_element_by_class_name("next-icon").click()
+            time.sleep(0.1)
+
+
+        except:
+            print("failed")
+            time.sleep(0.5)
+
+            try:
+                driver.get(path)
+                time.sleep(1)
+                driver.find_element_by_class_name("typing-type-here").send_keys(trans)
+                time.sleep(0.1)
+                driver.find_element_by_class_name("next-icon").click()
+                time.sleep(0.1)
+                driver.find_element_by_class_name("next-icon").click()
+                time.sleep(0.1)
+
+
+            except:
+                print("failed")
+                time.sleep(0.5)
+
+            try:
+                driver.get(path)
+                time.sleep(1)
+                driver.find_element_by_class_name("typing-type-here").send_keys(trans)
+                time.sleep(0.1)
+                driver.find_element_by_class_name("next-icon").click()
+                time.sleep(0.1)
+                driver.find_element_by_class_name("next-icon").click()
+                time.sleep(0.1)
+
+
+            except:
+                print("ooooooooofffffff")
+                time.sleep(0.5)
+
+
 
     if n == reps:
         break
