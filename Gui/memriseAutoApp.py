@@ -12,7 +12,6 @@ class MemriseAutoApp(App):
     RequirementsChangeLastSelected = None
 
     def switch_changed(self, _, state):
-        print(state)
         self.root.ids["HomeScreen"].ids["PointsInput"].opacity = 0.5 if state else 1
         self.root.ids["HomeScreen"].ids["TimeInput"].opacity = 0.5 if state else 1
         self.root.ids["HomeScreen"].ids["RequirementsAll"].opacity = 0.5 if state else 1
@@ -30,4 +29,4 @@ class MemriseAutoApp(App):
             this.state = "down"
 
     def start_mining(self):
-        print("starting")
+        pass
