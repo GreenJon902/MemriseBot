@@ -1,0 +1,227 @@
+#:import C kivy.utils.get_color_from_hex
+
+ScreenManager:
+    id: SM
+
+    Home:
+        id: HomeScreen
+        name: "HomeScreen"
+        manager: 'SM'
+
+
+<Home@Screen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            font_size: dp(40)
+            height: dp(40) * 2
+            size_hint_y: None
+            text: "Memrise Auto"
+            underline: True
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: "30dp"
+
+            RoundedTextInput:
+                id: UsrNameInput
+                rows: 1
+                font_size: dp(20)
+                multiline: False
+                height: dp(20) * 2
+                size_hint_y: None
+
+                hint_text: "Username or Email"
+
+            Widget:
+                size_hint_y: 0.05
+
+            RoundedTextInput:
+                id: PwdInput
+                rows: 1
+                font_size: dp(20)
+                multiline: False
+                height: dp(20) * 2
+                size_hint_y: None
+
+                password: True
+                hint_text: "Password"
+
+            Widget:
+                size_hint_y: 0.1
+
+            BoxLayout:
+                orientation: "horizontal"
+                height: dp(20) * 2
+                size_hint_y: None
+
+                Label:
+                    id: MineUntilOrForLabel
+
+                    font_size: dp(20)
+                    height: dp(20) * 2
+                    size_hint: None, None
+                    text: "Only stop when stop pressed"
+
+                    width: MineUntilOrForLabel.texture_size[0]
+
+                Switch:
+                    id: MineUntilOrForSwitch
+
+                    on_active: app.switch_changed(*args)
+
+
+                Widget:
+
+            Widget:
+                size_hint_y: 0.1
+
+            BoxLayout:
+                orientation: "horizontal"
+                height: dp(20) * 2
+                size_hint_y: None
+
+                Label:
+                    id: MineUntilLabel
+
+                    font_size: dp(20)
+                    height: dp(20) * 2
+                    size_hint: None, None
+                    text: "Mine until"
+
+                    width: MineUntilLabel.texture_size[0]
+
+
+                Widget:
+                    width:dp(25)
+                    size_hint_x: None
+
+                RoundedTextInput:
+                    id: PointsInput
+                    rows: 1
+                    font_size: dp(20)
+                    multiline: False
+                    height: dp(20) * 2
+                    size_hint_y: None
+
+                    input_filter: "int"
+                    hint_text: "Points"
+
+            Widget:
+                size_hint_y: 0.05
+
+            BoxLayout:
+                orientation: "horizontal"
+                height: dp(20) * 2
+                size_hint_y: None
+
+                Label:
+                    id: MineForLabel
+
+                    font_size: dp(20)
+                    height: dp(20) * 2
+                    size_hint: None, None
+                    text: "Mine for"
+
+                    width: MineForLabel.texture_size[0]
+
+
+                Widget:
+                    width: dp(25)
+                    size_hint_x: None
+
+                RoundedTextInput:
+                    id: TimeInput
+                    rows: 1
+                    font_size: dp(20)
+                    multiline: False
+                    height: dp(20) * 2
+                    size_hint_y: None
+
+                    input_filter: "int"
+                    hint_text: "Minutes"
+
+            Widget:
+                size_hint_y: 0.1
+
+            BoxLayout:
+                id: RequirementsLayout
+
+                orientation: "horizontal"
+                height: dp(20) * 2
+                size_hint_y: None
+
+                ToggleButton:
+                    id: RequirementsAll
+
+                    text: "Stop when all requirements are reached"
+                    group: "requirements"
+
+                    state: "down"
+                    on_press: app.RequirementsChange(*args)
+
+                ToggleButton:
+                    id: RequirementsSingle
+
+                    text: "Stop when 1 of the requirements are reached"
+                    group: "requirements"
+                    on_press: app.RequirementsChange(*args)
+
+
+
+            Widget:
+                size_hint_y: 0.1
+
+
+            Button:
+                text: "Start"
+                on_release: app.start_mining()
+
+
+<RoundedTextInput@TextInput>:
+    font_size: '14dp'
+    background_color: 0,0,0,0
+    cursor_color: C('#ffffff')
+    canvas.before:
+        Color:
+            rgba: C('#ffffff')
+    canvas.after:
+        Color:
+            rgb: C('#0f192e')
+        Ellipse:
+            angle_start:180
+            angle_end:360
+            pos:(self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Ellipse:
+            angle_start:360
+            angle_end:540
+            pos: (self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Color:
+            rgba: C('#3f92db')
+        Line:
+            points: self.pos[0] , self.pos[1], self.pos[0] + self.size[0], self.pos[1]
+        Line:
+            points: self.pos[0], self.pos[1] + self.size[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1]
+        Line:
+            ellipse: self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 180, 360
+        Line:
+            ellipse: self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 360, 540
