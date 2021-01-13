@@ -8,6 +8,11 @@ ScreenManager:
         name: "HomeScreen"
         manager: 'SM'
 
+    Credits:
+        id: CreditsScreen
+        name: "CreditsScreen"
+        manager: 'SM'
+
 
 <Home@Screen>:
     canvas.before:
@@ -21,12 +26,10 @@ ScreenManager:
     BoxLayout:
         orientation: "vertical"
 
-        Label:
-            font_size: dp(40)
-            height: dp(40) * 2
+        BoxLayout:
+            orientation: "horizontal"
+            height: sp(40) * 2
             size_hint_y: None
-            text: "Memrise Auto"
-            underline: True
 
             canvas.before:
                 Color:
@@ -36,16 +39,42 @@ ScreenManager:
                     pos: self.pos
                     size: self.size
 
+            Button:
+                text: "Credits"
+                on_release: app.root.current = "CreditsScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot"
+                underline: True
+
+                size_hint_x: 0.8
+
+            Button:
+                text: ""
+                on_release: pass
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+
         BoxLayout:
             orientation: 'vertical'
-            padding: "30dp"
+            padding: sp(30)
 
             RoundedTextInput:
                 id: UsrNameInput
                 rows: 1
-                font_size: dp(20)
+                font_size: sp(20)
                 multiline: False
-                height: dp(20) * 2
+                height: sp(20) * 2
                 size_hint_y: None
 
                 hint_text: "Username or Email"
@@ -56,9 +85,9 @@ ScreenManager:
             RoundedTextInput:
                 id: PwdInput
                 rows: 1
-                font_size: dp(20)
+                font_size: sp(20)
                 multiline: False
-                height: dp(20) * 2
+                height: sp(20) * 2
                 size_hint_y: None
 
                 password: True
@@ -69,14 +98,14 @@ ScreenManager:
 
             BoxLayout:
                 orientation: "horizontal"
-                height: dp(20) * 2
+                height: sp(20) * 2
                 size_hint_y: None
 
                 Label:
                     id: MineUntilOrForLabel
 
-                    font_size: dp(20)
-                    height: dp(20) * 2
+                    font_size: sp(20)
+                    height: sp(20) * 2
                     size_hint: None, None
                     text: "Only stop when stop pressed"
 
@@ -95,14 +124,14 @@ ScreenManager:
 
             BoxLayout:
                 orientation: "horizontal"
-                height: dp(20) * 2
+                height: sp(20) * 2
                 size_hint_y: None
 
                 Label:
                     id: MineUntilLabel
 
-                    font_size: dp(20)
-                    height: dp(20) * 2
+                    font_size: sp(20)
+                    height: sp(20) * 2
                     size_hint: None, None
                     text: "Mine until"
 
@@ -110,15 +139,15 @@ ScreenManager:
 
 
                 Widget:
-                    width:dp(25)
+                    width:sp(25)
                     size_hint_x: None
 
                 RoundedTextInput:
                     id: PointsInput
                     rows: 1
-                    font_size: dp(20)
+                    font_size: sp(20)
                     multiline: False
-                    height: dp(20) * 2
+                    height: sp(20) * 2
                     size_hint_y: None
 
                     input_filter: "int"
@@ -129,14 +158,14 @@ ScreenManager:
 
             BoxLayout:
                 orientation: "horizontal"
-                height: dp(20) * 2
+                height: sp(20) * 2
                 size_hint_y: None
 
                 Label:
                     id: MineForLabel
 
-                    font_size: dp(20)
-                    height: dp(20) * 2
+                    font_size: sp(20)
+                    height: sp(20) * 2
                     size_hint: None, None
                     text: "Mine for"
 
@@ -144,15 +173,15 @@ ScreenManager:
 
 
                 Widget:
-                    width: dp(25)
+                    width: sp(25)
                     size_hint_x: None
 
                 RoundedTextInput:
                     id: TimeInput
                     rows: 1
-                    font_size: dp(20)
+                    font_size: sp(20)
                     multiline: False
-                    height: dp(20) * 2
+                    height: sp(20) * 2
                     size_hint_y: None
 
                     input_filter: "int"
@@ -165,7 +194,7 @@ ScreenManager:
                 id: RequirementsLayout
 
                 orientation: "horizontal"
-                height: dp(20) * 2
+                height: sp(20) * 2
                 size_hint_y: None
 
                 ToggleButton:
@@ -195,8 +224,48 @@ ScreenManager:
                 on_release: app.start_mining()
 
 
+<Credits@Screen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+
+        Label:
+            font_size: sp(40)
+            height: sp(40) * 2
+            size_hint_y: None
+            text: "Memrise Bot - credits"
+            underline: True
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Label:
+            font_size: sp(20)
+            text: "Designed by GreenJon902 \n Programed by GreenJon902 \n Memrise Portal - [u][ref=http://www.crummy.com/software/BeautifulSoup/bs4/]BeautifulSoup4[/ref][/u]"
+            markup: True
+            on_ref_press:
+                import webbrowser
+                webbrowser.open(args[1])
+
+            halign: "center"
+
+        Widget:
+
+
 <RoundedTextInput@TextInput>:
-    font_size: '14dp'
+    font_size: sp(14)
     background_color: 0,0,0,0
     cursor_color: C('#ffffff')
     canvas.before:
