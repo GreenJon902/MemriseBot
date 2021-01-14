@@ -9,10 +9,10 @@ def setPos(tBox):
 
     pos = pyautogui.position()
 
-    tBox.config(state=NORMAL)
+    tBox.Config(state=NORMAL)
     tBox.delete(1.0, "end")
     tBox.insert(1.0, str(pos[0]) + ", " + str(pos[1]))
-    tBox.config(state=DISABLED)
+    tBox.Config(state=DISABLED)
 
 
 class id:
