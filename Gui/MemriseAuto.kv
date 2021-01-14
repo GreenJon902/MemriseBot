@@ -1,7 +1,9 @@
 #:import C kivy.utils.get_color_from_hex
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
 
 ScreenManager:
     id: SM
+    transition: FadeTransition()
 
     Home:
         id: HomeScreen
@@ -236,12 +238,10 @@ ScreenManager:
     BoxLayout:
         orientation: "vertical"
 
-        Label:
-            font_size: sp(40)
+        BoxLayout:
+            orientation: "horizontal"
             height: sp(40) * 2
             size_hint_y: None
-            text: "Memrise Bot - credits"
-            underline: True
 
             canvas.before:
                 Color:
@@ -250,6 +250,31 @@ ScreenManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
+
+            Button:
+                text: "Back"
+                on_release: app.root.current = "HomeScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot - Credits"
+                underline: True
+
+                size_hint_x: 0.8
+
+            Button:
+                text: ""
+                on_release: pass
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
 
         Label:
             font_size: sp(20)
