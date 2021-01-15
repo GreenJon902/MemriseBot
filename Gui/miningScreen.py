@@ -114,9 +114,13 @@ class MiningScreen(Screen):
         webpage_image_updater.start()
         Logger.info("Miner: Started window viewer clock")
 
+        # Mining ---------------------------------------------------------
 
-        time.sleep(10)
+        driver.find_element_by_id(Config.get("Memrise_Element_Ids", "username_input")).send_keys(self.usrName)
+        driver.find_element_by_id(Config.get("Memrise_Element_Ids", "password_input")).send_keys(self.pwdInput)
 
+        # Mining ---------------------------------------------------------
 
         self.do_webpage_image_update = False
+        Logger.info("Miner: Stopped window viewer clock")
         Logger.info("Miner: Finished mining function")

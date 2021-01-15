@@ -14,10 +14,15 @@ def create():
 
     Config.add_section("Mining")
     Config.add_section("Gui")
+    Config.add_section("Memrise_Element_Ids")
 
     Config.set("Mining", "mode", "Ghost")
     Config.set("Mining", "url", "https://app.memrise.com/signin")
+
     Config.set("Gui", "webpage_image_update_interval", 1)
+
+    Config.set("Memrise_Element_Ids", "username_input", "username")
+    Config.set("Memrise_Element_Ids", "password_input", "password")
 
 
     with open(os.path.join(user_data_dir, "config.ini"), 'w'):
