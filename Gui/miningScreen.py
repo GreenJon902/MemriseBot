@@ -1,5 +1,4 @@
 import io
-import threading
 import time
 from threading import Thread
 
@@ -7,7 +6,6 @@ from kivy import Logger
 from kivy.clock import Clock
 from kivy.graphics import Line
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty, OptionProperty
-from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 from kivy.core.image import Image as CoreImage
 
@@ -27,11 +25,14 @@ class MiningScreen(Screen):
     requireAll = BooleanProperty(True)
     mode = OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"])
     midLinePos = NumericProperty(0)
+    webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
 
+    do_webpage_image_update = False
     driver = None
 
     def on_pre_enter(self, *args):
         self.mode = Config.get("Mining", "mode")
+        self.webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
 
         self.ids["InfoLabel"].text = "Mining Mode - " + str(self.mode)
 
@@ -71,12 +72,24 @@ class MiningScreen(Screen):
     def on_enter(self, *args):
         Thread(target=self.mine).start()
 
-    def update_image(self, _):
-        data = io.BytesIO(self.driver.get_screenshot_as_png())
-
-        coreImage = CoreImage(data, ext="png")
+    def webpage_image_update(self, coreImage, t):
         texture = coreImage.texture
         self.ids["WebpageImage"].texture = texture
+
+        Logger.info("WebpageImage: Finished image update in " + str(time.time() - t))
+
+    def webpage_image_updater(self):
+        while self.do_webpage_image_update:
+            t = time.time()
+
+            Logger.info("WebpageImage: Starting image update")
+
+            data = io.BytesIO(self.driver.get_screenshot_as_png())
+
+            coreImage = CoreImage(data, ext="png")
+            Clock.schedule_once(lambda _: self.webpage_image_update(coreImage, t), 0)
+
+            time.sleep(self.webpage_image_update_interval - (time.time() - t))
 
     def mine(self):
         Logger.info("Miner: Started mining function")
@@ -96,12 +109,14 @@ class MiningScreen(Screen):
         Logger.info("Miner: Loaded " + str(url))
 
         self.driver = driver
-        screenShotClock = Clock.schedule_interval(self.update_image, 1)
+        self.do_webpage_image_update = True
+        webpage_image_updater = Thread(target=self.webpage_image_updater)
+        webpage_image_updater.start()
         Logger.info("Miner: Started window viewer clock")
 
 
-        time.sleep(100)
+        time.sleep(10)
 
 
-        screenShotClock.cancel()
+        self.do_webpage_image_update = False
         Logger.info("Miner: Finished mining function")

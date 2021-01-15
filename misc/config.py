@@ -13,8 +13,11 @@ def create():
         Config.remove_section(section)
 
     Config.add_section("Mining")
+    Config.add_section("Gui")
+
     Config.set("Mining", "mode", "Ghost")
     Config.set("Mining", "url", "https://app.memrise.com/signin")
+    Config.set("Gui", "webpage_image_update_interval", 1)
 
 
     with open(os.path.join(user_data_dir, "config.ini"), 'w'):
