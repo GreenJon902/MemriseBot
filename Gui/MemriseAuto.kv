@@ -501,7 +501,9 @@ ScreenManager:
             orientation: "horizontal"
 
             BoxLayout:
-                size_hint_x: 0.5
+                id: LabelHolder
+
+                size_hint_x: None
                 padding: sp(10)
 
                 FloatLayout:
@@ -530,8 +532,5 @@ ScreenManager:
                         opacity: 0
 
 
-            Widget:
-                size_hint_x: 0.5
-
-
-        Widget:
+            Image:
+                id: WebpageImage
