@@ -367,10 +367,12 @@ ScreenManager:
 
 
                 ConfigItem:
-                    type: "title"
-                    title: "Mining"
-                    description: "Settings for mining"
+                    type: "bool"
+                    title: "Save Logins"
+                    description: "Save username and password"
 
+                    section: "Misc"
+                    option: "saveLogins"
 
                 ConfigItem:
                     type: "option"
@@ -382,6 +384,14 @@ ScreenManager:
 
                     section: "Mining"
                     option: "mode"
+
+                ConfigItem:
+                    type: "bool"
+                    title: "Headless"
+                    description: "Run with Chrome open or not open"
+
+                    section: "Gui"
+                    option: "headless"
 
 
                 Widget:

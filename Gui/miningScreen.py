@@ -98,7 +98,8 @@ class MiningScreen(Screen):
         Logger.info("Miner: Chromedriver installed if not already")
 
         chrome_options = ChromeOptions()
-        chrome_options.add_argument("--headless")
+        if Config.getboolean("Gui", "headless"):
+            chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         Logger.info("Miner: Chromedriver setup")
 
