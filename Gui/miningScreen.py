@@ -117,11 +117,16 @@ class MiningScreen(Screen):
 
         # Mining ---------------------------------------------------------
 
-        driver.find_element_by_id(Config.get("Memrise_Element_Ids", "username_input")).send_keys(self.usrName)
-        driver.find_element_by_id(Config.get("Memrise_Element_Ids", "password_input")).send_keys(self.pwdInput)
+        driver.find_element_by_id(Config.get("Memrise_Element", "username_input_id")).send_keys(self.usrName)
+        driver.find_element_by_id(Config.get("Memrise_Element", "password_input_id")).send_keys(self.pwdInput)
+        print(driver.find_element_by_xpath(Config.get("Memrise_Element", "login_submit_button_xpath")))
 
         # Mining ---------------------------------------------------------
 
         self.do_webpage_image_update = False
         Logger.info("Miner: Stopped window viewer clock")
         Logger.info("Miner: Finished mining function")
+
+        time.sleep(5)
+
+        driver.close()
