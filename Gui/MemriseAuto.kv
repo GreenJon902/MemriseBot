@@ -36,6 +36,8 @@ ScreenManager:
             pos: self.pos
             size: self.size
 
+    on_kv_post: app.mabyDoPasswordAndLogins(self)
+
     BoxLayout:
         orientation: "vertical"
 

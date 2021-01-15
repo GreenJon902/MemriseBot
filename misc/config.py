@@ -9,13 +9,13 @@ Config.read(os.path.join(user_data_dir, "config.ini"))
 
 
 def create():
-    for section in Config.sections():
+    """    for section in Config.sections():
         Config.remove_section(section)
 
     Config.add_section("Misc")
     Config.add_section("Mining")
     Config.add_section("Gui")
-    Config.add_section("Memrise_Element_Ids")
+    Config.add_section("Memrise_Element_Ids")"""
 
     Config.set("Mining", "mode", "Ghost")
     Config.set("Mining", "url", "https://app.memrise.com/signin")
@@ -26,7 +26,9 @@ def create():
     Config.set("Memrise_Element_Ids", "username_input", "username")
     Config.set("Memrise_Element_Ids", "password_input", "password")
 
-    Config.set("Misc", "saveLogins", False)
+    Config.set("Misc", "saveLogins", True)
+    #Config.set("Misc", "username", "")#for testing
+    #Config.set("Misc", "password", "")
 
 
     with open(os.path.join(user_data_dir, "config.ini"), 'w'):
