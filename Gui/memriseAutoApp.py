@@ -2,6 +2,8 @@ from kivy.animation import Animation
 from kivy.app import App
 from kivy.core.window import Window
 
+from Gui.miningScreen import MiningScreen
+
 
 Window.size = 950, 500
 
