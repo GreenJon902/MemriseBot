@@ -36,4 +36,4 @@ class MemriseAutoApp(App):
             this.state = "down"
 
     def start_mining(self):
-        pass
+        self.root.current = "MiningScreen"
