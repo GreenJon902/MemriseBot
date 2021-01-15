@@ -36,4 +36,14 @@ class MemriseAutoApp(App):
             this.state = "down"
 
     def start_mining(self):
+
+        home = self.root.get_screen("HomeScreen")
+        mining = self.root.get_screen("MiningScreen")
+        mining.usrName = home.ids["UsrNameInput"].text
+        mining.pwdInput = home.ids["PwdInput"].text
+        mining.stopOnlyWhenStopPressed = home.ids["MineUntilOrForSwitch"].active
+        mining.mineUntilPoints = None if home.ids["PointsInput"].text == "" else home.ids["PointsInput"].text
+        mining.mineForTime = None if home.ids["TimeInput"].text == "" else home.ids["TimeInput"].text
+        mining.requireAll = home.ids["RequirementsAll"].state == "down"
+
         self.root.current = "MiningScreen"

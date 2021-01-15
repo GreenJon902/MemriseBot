@@ -476,6 +476,8 @@ ScreenManager:
         orientation: "vertical"
 
         BoxLayout:
+            id: Nav
+
             orientation: "horizontal"
             height: sp(40) * 2
             size_hint_y: None
@@ -494,6 +496,42 @@ ScreenManager:
                 underline: True
 
                 size_hint_x: 1
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            BoxLayout:
+                size_hint_x: 0.5
+                padding: sp(10)
+
+                FloatLayout:
+                    Label:
+                        id: InfoLabel
+
+                        pos_hint: {"x": 0, "y": 0}
+                        size_hint: 1, 1
+
+                        font_size: sp(25)
+                        text: ""
+                        halign: "left"
+                        valign: "top"
+                        text_size: self.size
+
+                    Label:
+                        id: InfoLabelHidden
+
+                        pos_hint: {"x": 0, "y": 0}
+                        size_hint: 1, 1
+
+                        font_size: sp(25)
+                        text: ""
+                        halign: "left"
+                        valign: "top"
+                        opacity: 0
+
+
+            Widget:
+                size_hint_x: 0.5
 
 
         Widget:

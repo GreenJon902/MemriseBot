@@ -14,9 +14,8 @@ def create():
 
     Config.add_section("Mining")
     Config.set("Mining", "mode", "Ghost")
+    Config.set("Mining", "url", "https://app.memrise.com/signin")
 
-    print(Config.sections())
-    print(Config.options("Mining"))
 
     with open(os.path.join(user_data_dir, "config.ini"), 'w'):
         Config.write()
