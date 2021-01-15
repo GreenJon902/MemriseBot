@@ -1,5 +1,6 @@
 #:import C kivy.utils.get_color_from_hex
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:set text_font_size "20sp"
 
 ScreenManager:
     id: SM
@@ -13,6 +14,11 @@ ScreenManager:
     Credits:
         id: CreditsScreen
         name: "CreditsScreen"
+        manager: 'SM'
+
+    Config:
+        id: ConfigScreen
+        name: "ConfigScreen"
         manager: 'SM'
 
 
@@ -58,8 +64,8 @@ ScreenManager:
                 size_hint_x: 0.8
 
             Button:
-                text: ""
-                on_release: pass
+                text: "Config"
+                on_release: app.root.current = "ConfigScreen"
 
                 background_normal: ''
                 background_color: C('#3b88d7')
@@ -268,10 +274,10 @@ ScreenManager:
                 size_hint_x: 0.8
 
             Button:
-                text: ""
-                on_release: pass
+                text: "Config"
+                on_release: app.root.current = "ConfigScreen"
 
-                background_normal: ''
+                background_normal: 'Config'
                 background_color: C('#3b88d7')
 
                 size_hint_x: 0.1
@@ -287,6 +293,87 @@ ScreenManager:
             halign: "center"
 
         Widget:
+
+
+<Config@Screen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    on_enter: ConfigLayout.on_enter()
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            height: sp(40) * 2
+            size_hint_y: None
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "Credits"
+                on_release: app.root.current = "CreditsScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot - Config"
+                underline: True
+
+                size_hint_x: 0.8
+
+            Button:
+                text: "Back"
+                on_release: app.root.current = "HomeScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+
+            ConfigLayout:
+                id: ConfigLayout
+
+                size_hint: 1, None
+                height: sum([c.height for c in self.children]) - Spacer.height
+
+                orientation: "vertical"
+
+
+                ConfigItem:
+                    type: "option"
+                    title: "Mining Mode"
+                    description: "Settings normal mining and custom mining"
+
+                    options: ["Blatant", "Ghost"]
+                    extra_info: {"Blatant": "Faster but can be detected", "Ghost": "Slower but undetectable"}
+
+                    section: "Mining"
+                    option: "mode"
+
+
+                Widget:
+                    id: Spacer
 
 
 <RoundedTextInput@TextInput>:
@@ -319,3 +406,46 @@ ScreenManager:
             ellipse: self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 180, 360
         Line:
             ellipse: self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 360, 540
+
+<ConfigItem>:
+    size_hint: 1, None
+    height: sp(text_font_size.replace("sp", "")) * 2 + sp(25)
+
+    padding: "10sp"
+
+    FloatLayout:
+        pos: self.parent.pos
+        size: self.parent.size
+
+        Label:
+            id: Title
+
+            pos_hint: {"x": 0, "top": 1}
+            size_hint: 0.5, None
+            height: text_font_size
+            font_size: text_font_size
+            text_size: self.size
+
+            text: "Title"
+            halign: "left"
+            underline: True
+
+        Label:
+            id: Description
+
+            pos_hint: {"x": 0, "y": 0}
+            size_hint: 0.5, None
+            height: text_font_size
+            font_size: text_font_size
+            text_size: self.size
+
+            text: "Description"
+            halign: "left"
+            underline: False
+
+        BoxLayout:
+            id: EditorHolder
+
+            pos_hint: {"right": 1, "y": 0}
+            size_hint: 0.5, None
+            height: sp(text_font_size.replace("sp", "")) * 2

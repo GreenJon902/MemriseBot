@@ -1,6 +1,6 @@
 # Pulled from GreenJon902/md5-unhasher
 
-from kivy.properties import OptionProperty, StringProperty, ObjectProperty, NumericProperty, ListProperty
+from kivy.properties import OptionProperty, StringProperty, ObjectProperty, NumericProperty, ListProperty, DictProperty
 from kivy.logger import Logger
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -19,7 +19,7 @@ class ConfigItem(BoxLayout):
     title = StringProperty("Title")
     description = StringProperty("Description")
     section = StringProperty("")
-    key = StringProperty("")
+    option = StringProperty("")
 
     # Numeric slider options
     min = NumericProperty(None)
@@ -29,6 +29,7 @@ class ConfigItem(BoxLayout):
 
     # Option options
     options = ListProperty([])
+    extra_info = DictProperty({})
 
 
     _editorHolder = ObjectProperty()
@@ -70,34 +71,41 @@ class ConfigItem(BoxLayout):
 
 
             self._editorWidget = Slider(min=self.sliderMin, max=self.sliderMax,
-                                        value=Config.getint(self.section, self.key), step=1)
+                                        value=Config.getint(self.section, self.option), step=1)
             self._editorWidget.bind(value=self.value_changed)
 
             self._editorWidget2 = TextInput(multiline=False, font_size=self._editorHolder.height / 2,
-                                            text=Config.get(self.section, self.key), input_filter="int")
+                                            text=Config.get(self.section, self.option), input_filter="int")
             self._editorWidget2.bind(on_text_validate=self.text_box_int_validator)
             self._editorWidget2.bind(focus=self.text_box_int_validator)
 
 
         elif self.type == "bool":
-            self._editorWidget = Switch(active=Config.getboolean(self.section, self.key))
+            self._editorWidget = Switch(active=Config.getboolean(self.section, self.option))
             self._editorWidget.bind(active=self.value_changed)
 
 
         elif self.type == "string":
             self._editorWidget = TextInput(multiline=False, font_size=self._editorHolder.height / 2,
-                                           text=Config.get(self.section, self.key))
+                                           text=Config.get(self.section, self.option))
             self._editorWidget.bind(on_text_validate=lambda *args: self.value_changed(None, self._editorWidget.text))
             self._editorWidget.bind(focus=lambda *args: self.value_changed(None, self._editorWidget.text))
 
         elif self.type == "option":
-            self._editorWidget = Button(text=Config.get(self.section, self.key))
+            self._editorWidget = Button(text=Config.get(self.section, self.option))
 
             dropDown = DropDown()
 
             for option in self.options:
-                btn = Button(text=option, size_hint_y=None, height=self.height)
-                btn.bind(on_release=lambda _btn: dropDown.select(_btn.text))
+                text = str(option)
+                try:
+                    text = text + " - " + str(self.extra_info[option])
+                except KeyError:
+                    pass
+
+                btn = Button(text=text, size_hint_y=None, height=self.height)
+                btn.tag = str(option)
+                btn.bind(on_release=lambda _btn: dropDown.select(_btn.tag))
                 dropDown.add_widget(btn)
 
             self._editorWidget.bind(on_release=dropDown.open)
@@ -118,7 +126,7 @@ class ConfigItem(BoxLayout):
 
             self._editorWidget.value = int(value)
 
-        Logger.info("Config: " + self.section + self.key + " set to " + str(value))
-        Config.set(self.section, self.key, value)
+        Logger.info("Config: " + self.section + self.option + " set to " + str(value))
+        Config.set(self.section, self.option, value)
         Config.write()
         Logger.info("Config: Saved config")
