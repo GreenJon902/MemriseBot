@@ -11,6 +11,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.core.image import Image as CoreImage
 
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import chromedriver_autoinstaller
@@ -28,7 +29,7 @@ class MiningScreen(Screen):
 
     def __init__(self, *args, **kwargs):
         self.Miner = self._Miner()
-        self.Miner.webpage_image_update_func = self.update_webpage_image
+        self.Miner.Gui = self
 
         super(MiningScreen, self).__init__(*args, **kwargs)
 
@@ -88,15 +89,15 @@ class MiningScreen(Screen):
         requireAll = BooleanProperty(True)
         mode = OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"])
         midLinePos = NumericProperty(0)
-        webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
+        webpage_image_update_interval = Config.getfloat("Gui", "webpage_image_update_interval")
 
         do_webpage_image_update = False
-        webpage_image_update_func = False
         driver = None
+        Gui = None
 
         def start(self):
             self.mode = Config.get("Mining", "mode")
-            self.webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
+            self.webpage_image_update_interval = Config.getfloat("Gui", "webpage_image_update_interval")
 
             self.install_dependants()
             self.setup()
@@ -131,7 +132,7 @@ class MiningScreen(Screen):
                     data = io.BytesIO(self.driver.get_screenshot_as_png())
 
                     coreImage = CoreImage(data, ext="png")
-                    Clock.schedule_once(lambda _: self.webpage_image_update_func(coreImage, t), 0)
+                    Clock.schedule_once(lambda _: self.Gui.update_webpage_image(coreImage, t), 0)
 
                     try:
                         time.sleep(self.webpage_image_update_interval - (time.time() - t))
@@ -174,6 +175,14 @@ class MiningScreen(Screen):
             MemriseElements.get("password_input", self.driver).send_keys(self.pwdInput)
             MemriseElements.get("login_submit_button", self.driver).click()
             wait_till_page_load(self.driver)
+
+            self.Gui.ids["WebpageImageLarge"].opacity = 1
+            try:
+                self.driver.execute_script("alert('testtest ya');")
+            except WebDriverException:
+                pass
+            time.sleep(10)
+
 
             Logger.info("Miner: Finished pre mining setup function")
 
