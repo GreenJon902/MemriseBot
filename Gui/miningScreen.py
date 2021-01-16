@@ -93,6 +93,12 @@ class MiningScreen(Screen):
             time.sleep(self.webpage_image_update_interval - (time.time() - t))
 
     def mine(self):
+        try:
+            self.driver.quit()
+        except AttributeError:
+            pass
+
+
         Logger.info("Miner: Started mining function")
 
         chromedriver_autoinstaller.install()

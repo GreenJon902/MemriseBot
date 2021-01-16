@@ -1,4 +1,5 @@
 import pathlib
+import sys
 from multiprocessing import freeze_support
 import os
 
@@ -35,3 +36,4 @@ if __name__ == '__main__':
 
     app = MemriseAutoApp()
     app.run()
+    sys.exit()

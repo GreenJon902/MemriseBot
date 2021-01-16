@@ -64,3 +64,12 @@ class MemriseAutoApp(App):
         mining.requireAll = home.ids["RequirementsAll"].state == "down"
 
         self.root.current = "MiningScreen"
+
+    def on_stop(self):
+        Config.write()
+
+        mining = self.root.get_screen("MiningScreen")
+        try:
+            mining.driver.quit()
+        except AttributeError:
+            pass
