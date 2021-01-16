@@ -1,4 +1,5 @@
 import io
+import os
 import time
 from threading import Thread
 
@@ -16,6 +17,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import chromedriver_autoinstaller
 
+from misc import user_data_dir
 from misc.webpageFunctions import wait_till_page_load
 from misc.config import Config
 from misc.memriseElements import MemriseElements
@@ -160,6 +162,7 @@ class MiningScreen(Screen):
             if Config.getboolean("Gui", "headless"):
                 chrome_options.add_argument("--headless")
             chrome_options.add_argument("--window-size=1920,1080")
+            chrome_options.add_argument("--log-path=" + str(os.path.join(user_data_dir, "chromedriver.log")))
             Logger.info("Miner: Chromedriver setup")
 
             url = Config.get("Mining", "url")
