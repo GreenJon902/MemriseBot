@@ -14,6 +14,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import chromedriver_autoinstaller
 from misc.config import Config
+from misc.memriseElements import MemriseElements
 
 
 class MiningScreen(Screen):
@@ -117,9 +118,10 @@ class MiningScreen(Screen):
 
         # Mining ---------------------------------------------------------
 
-        driver.find_element_by_id(Config.get("Memrise_Element", "username_input_id")).send_keys(self.usrName)
-        driver.find_element_by_id(Config.get("Memrise_Element", "password_input_id")).send_keys(self.pwdInput)
-        print(driver.find_element_by_xpath(Config.get("Memrise_Element", "login_submit_button_xpath")))
+
+        MemriseElements.get("username_input", driver).send_keys(self.usrName)
+        MemriseElements.get("password_input", driver).send_keys(self.pwdInput)
+        MemriseElements.get("login_submit_button", driver).send_keys(self.pwdInput).click()
 
         # Mining ---------------------------------------------------------
 

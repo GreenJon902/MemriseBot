@@ -22,7 +22,11 @@ if __name__ == '__main__':
 
     from misc.config import create
     create()
+    Logger.info("UserDataDir: UserDataDir at \"" + str(user_data_dir) + "\"")
 
+    from misc.config import Config
+    from misc.memriseElements import MemriseElements
+    MemriseElements.setup(Config)
     Logger.info("UserDataDir: UserDataDir at \"" + str(user_data_dir) + "\"")
 
     from misc import *

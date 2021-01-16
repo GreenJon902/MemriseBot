@@ -14,8 +14,9 @@ def create():
 
     Config.add_section("Misc")
     Config.add_section("Mining")
-    Config.add_section("Gui")
-    Config.add_section("Memrise_Element")"""
+    Config.add_section("Gui")"""
+    Config.remove_section("Memrise_Element")
+    Config.add_section("Memrise_Element")
 
     Config.set("Mining", "mode", "Ghost")
     Config.set("Mining", "url", "https://app.memrise.com/signin")
@@ -23,10 +24,9 @@ def create():
     Config.set("Gui", "webpage_image_update_interval", 1)
     #Config.set("Gui", "headless", True)
 
-    Config.set("Memrise_Element", "username_input_id", "username")
-    Config.set("Memrise_Element", "password_input_id", "password")
-    Config.set("Memrise_Element", "login_submit_button_xpath",
-               "/html/body/div[2]/div/div[2]/div/form/div[3]/div[1]/button")
+    Config.set("Memrise_Element", "username_input-id", "username")
+    Config.set("Memrise_Element", "password_input-id", "password")
+    Config.set("Memrise_Element", "login_submit_button-class_name", "sc-kEjbxe evItLl")
 
     Config.set("Misc", "saveLogins", True)
     #Config.set("Misc", "username", "")#for testing
