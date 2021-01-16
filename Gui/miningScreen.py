@@ -4,6 +4,7 @@ from threading import Thread
 
 from kivy import Logger
 from kivy.clock import Clock
+from kivy.event import EventDispatcher
 from kivy.graphics import Line
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty, OptionProperty, DictProperty
 from kivy.uix.screenmanager import Screen
@@ -18,39 +19,32 @@ from misc.memriseElements import MemriseElements
 
 
 class MiningScreen(Screen):
-    MinerSettings = DictProperty({
-        "usrName": StringProperty(""),
-        "pwdInput": StringProperty(""),
-        "mineUntilPoints": NumericProperty(None),
-        "mineForTime": NumericProperty(None),
-        "requireAll": BooleanProperty(True),
-        "mode": OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"]),
-        "webpage_image_update_interval": Config.getint("Gui", "webpage_image_update_interval")
-    })
-
     Miner = None
 
     midLinePos = NumericProperty(0)
     stopOnlyWhenStopPressed = BooleanProperty(False)
 
-    def on_pre_enter(self, *args):
-        self.MinerSettings["mode"] = Config.get("Mining", "mode")
-        self.MinerSettings["webpage_image_update_interval"] = Config.getint("Gui", "webpage_image_update_interval")
+    def __init__(self, *args, **kwargs):
+        self.Miner = self._Miner()
+        self.Miner.webpage_image_update_func = self.update_webpage_image
 
-        self.ids["InfoLabel"].text = "Mining Mode - " + str(self.MinerSettings["mode"])
+        super(MiningScreen, self).__init__(*args, **kwargs)
+
+    def on_pre_enter(self, *args):
+        self.ids["InfoLabel"].text = "Mining Mode - " + str(self.Miner.mode)
 
         if not self.stopOnlyWhenStopPressed:
             try:
-                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nMine for " + str(int(self.MinerSettings["mineForTime"])) + \
+                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nMine for " + str(int(self.Miner.mineForTime)) + \
                                              " minutes"
             except TypeError:
                 pass
             try:
                 self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nStop when " + \
-                                             str(int(self.MinerSettings["mineUntilPoints"])) + " points reached"
+                                             str(int(self.Miner.mineUntilPoints)) + " points reached"
             except TypeError:
                 pass
-            self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nRequire All - " + str(self.MinerSettings["requireAll"])
+            self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nRequire All - " + str(self.Miner.requireAll)
 
         self.ids["InfoLabelHidden"].text = self.ids["InfoLabel"].text
         self.ids["InfoLabelHidden"].texture_update()
@@ -78,27 +72,36 @@ class MiningScreen(Screen):
         Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
 
     def on_enter(self, *args):
-        self.Miner = self._Miner(webpage_image_update_func=self.update_webpage_image, **self.MinerSettings)
-
         Thread(target=self.Miner.start, daemon=True).start()
 
     # Miner ------------------------------------------------------------------------------------------------------------
 
-    class _Miner:
+    class _Miner(EventDispatcher):
+        usrName = StringProperty("")
+        pwdInput = StringProperty("")
+        stopOnlyWhenStopPressed = BooleanProperty(False)
+        mineUntilPoints = NumericProperty(None)
+        mineForTime = NumericProperty(None)
+        requireAll = BooleanProperty(True)
+        mode = OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"])
+        midLinePos = NumericProperty(0)
+        webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
+
         do_webpage_image_update = False
         webpage_image_update_func = False
         driver = None
 
-        def __init__(self, **kwargs):
-            self.__dict__.update(kwargs)
-
         def start(self):
+            self.mode = Config.get("Mining", "mode")
+            self.webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
+
             self.install_dependants()
             self.set_up()
             self.start_webpage_image_updater()
             self.do_webpage_image_update = True
-            self.pre_mine()
-            self.mine()
+            if self.mode == "Blatant":
+                self.pre_mine_blatant()
+                self.mine_blatant()
             self.do_webpage_image_update = False
             self.post_mine()
 
@@ -157,12 +160,34 @@ class MiningScreen(Screen):
 
             Logger.info("Miner: Finished pre mining setup function")
 
-        def mine(self):
-            Logger.info("Miner: Started mining function")
+        def pre_mine_blatant(self):
+            Logger.info("Miner: Started blatant pre mining setup function")
+
+            pass
+
+            Logger.info("Miner: Finished blatant pre mining setup function")
+
+        def pre_mine_ghost(self):
+            Logger.info("Miner: Started ghost pre mining setup function")
+
+            pass
+
+            Logger.info("Miner: Finished ghost pre mining setup function")
+
+        def mine_blatant(self):
+            Logger.info("Miner: Started blatant mining function")
 
             time.sleep(5)
 
-            Logger.info("Miner: Finished mining function")
+            Logger.info("Miner: Finished blatant mining function")
+
+
+        def mine_ghost(self):
+            Logger.info("Miner: Started ghost mining function")
+
+            pass
+
+            Logger.info("Miner: Finished ghost mining function")
 
         def post_mine(self):
             self.driver.close()
