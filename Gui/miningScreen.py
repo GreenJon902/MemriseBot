@@ -71,8 +71,14 @@ class MiningScreen(Screen):
             Line(points=[self.midLinePos, 0, self.midLinePos, self.height - self.ids["Nav"].height], width=2,
                  cap="none", joint="none", close=False)
 
+    def update_webpage_image(self, coreImage, t):
+        texture = coreImage.texture
+        self.ids["WebpageImage"].texture = texture
+
+        Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
+
     def on_enter(self, *args):
-        self.Miner = self._Miner(**self.MinerSettings)
+        self.Miner = self._Miner(webpage_image_update_func=self.update_webpage_image, **self.MinerSettings)
 
         Thread(target=self.Miner.start, daemon=True).start()
 
@@ -80,6 +86,7 @@ class MiningScreen(Screen):
 
     class _Miner:
         do_webpage_image_update = False
+        webpage_image_update_func = False
         driver = None
 
         def __init__(self, **kwargs):
@@ -88,28 +95,33 @@ class MiningScreen(Screen):
         def start(self):
             self.install_dependants()
             self.set_up()
+            self.start_webpage_image_updater()
             self.do_webpage_image_update = True
+            self.pre_mine()
             self.mine()
             self.do_webpage_image_update = False
+            self.post_mine()
 
-        def webpage_image_update(self, coreImage, t):
-            texture = coreImage.texture
-            self.ids["WebpageImage"].texture = texture
-
-            Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
+        def start_webpage_image_updater(self):
+            Thread(target=self.webpage_image_updater, daemon=True).start()
 
         def webpage_image_updater(self):
-            while self.do_webpage_image_update:
-                t = time.time()
+            while True:
+                if self.do_webpage_image_update:
+                    t = time.time()
 
-                Logger.debug("WebpageImage: Starting image update")
+                    Logger.debug("WebpageImage: Starting image update")
 
-                data = io.BytesIO(self.driver.get_screenshot_as_png())
+                    data = io.BytesIO(self.driver.get_screenshot_as_png())
 
-                coreImage = CoreImage(data, ext="png")
-                Clock.schedule_once(lambda _: self.webpage_image_update(coreImage, t), 0)
+                    coreImage = CoreImage(data, ext="png")
+                    Clock.schedule_once(lambda _: self.webpage_image_update_func(coreImage, t), 0)
 
-                time.sleep(self.webpage_image_update_interval - (time.time() - t))
+                    try:
+                        time.sleep(self.webpage_image_update_interval - (time.time() - t))
+                    except ValueError:
+                        Logger.warning("WebpageImage: Convert took to long, took " + str(time.time() - t) +
+                                       " and it should've took " + str(self.webpage_image_update_interval))
 
         def install_dependants(self):
             chromedriver_autoinstaller.install()
@@ -136,15 +148,21 @@ class MiningScreen(Screen):
 
             Logger.info("Miner: Loaded " + str(url))
 
-        def mine(self):
-            Logger.info("Miner: Started mining function")
+        def pre_mine(self):
+            Logger.info("Miner: Started pre mining setup function")
 
             MemriseElements.get("username_input", self.driver).send_keys(self.usrName)
             MemriseElements.get("password_input", self.driver).send_keys(self.pwdInput)
             MemriseElements.get("login_submit_button", self.driver).click()
 
+            Logger.info("Miner: Finished pre mining setup function")
+
+        def mine(self):
+            Logger.info("Miner: Started mining function")
+
             time.sleep(5)
 
-            self.driver.close()
-
             Logger.info("Miner: Finished mining function")
+
+        def post_mine(self):
+            self.driver.close()
