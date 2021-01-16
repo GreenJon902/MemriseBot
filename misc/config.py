@@ -20,6 +20,7 @@ def create():
 
     #Config.set("Mining", "mode", "Ghost")
     Config.set("Mining", "url", "https://app.memrise.com/signin")
+    Config.set("Mining", "page_timeout", 10)
 
     Config.set("Gui", "webpage_image_update_interval", 1)
     #Config.set("Gui", "headless", True)

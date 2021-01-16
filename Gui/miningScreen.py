@@ -14,6 +14,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import chromedriver_autoinstaller
+
+from misc.webpageFunctions import wait_till_page_load
 from misc.config import Config
 from misc.memriseElements import MemriseElements
 
@@ -171,6 +173,7 @@ class MiningScreen(Screen):
             MemriseElements.get("username_input", self.driver).send_keys(self.usrName)
             MemriseElements.get("password_input", self.driver).send_keys(self.pwdInput)
             MemriseElements.get("login_submit_button", self.driver).click()
+            wait_till_page_load(self.driver)
 
             Logger.info("Miner: Finished pre mining setup function")
 
