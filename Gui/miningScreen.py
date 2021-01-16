@@ -76,13 +76,13 @@ class MiningScreen(Screen):
         texture = coreImage.texture
         self.ids["WebpageImage"].texture = texture
 
-        Logger.info("WebpageImage: Finished image update in " + str(time.time() - t))
+        Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
 
     def webpage_image_updater(self):
         while self.do_webpage_image_update:
             t = time.time()
 
-            Logger.info("WebpageImage: Starting image update")
+            Logger.debug("WebpageImage: Starting image update")
 
             data = io.BytesIO(self.driver.get_screenshot_as_png())
 
