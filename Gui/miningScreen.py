@@ -121,7 +121,7 @@ class MiningScreen(Screen):
 
         MemriseElements.get("username_input", driver).send_keys(self.usrName)
         MemriseElements.get("password_input", driver).send_keys(self.pwdInput)
-        MemriseElements.get("login_submit_button", driver).send_keys(self.pwdInput).click()
+        MemriseElements.get("login_submit_button", driver).click()
 
         # Mining ---------------------------------------------------------
 

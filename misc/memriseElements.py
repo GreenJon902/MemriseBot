@@ -15,7 +15,6 @@ class _MemriseElements:
         self.elements.update(elements)
 
     def get(self, name, driver):
-        print(name, self.elements)
         return driver.find_element(*self.elements[name])
 
 
