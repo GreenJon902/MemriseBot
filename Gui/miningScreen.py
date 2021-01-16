@@ -68,6 +68,7 @@ class MiningScreen(Screen):
     def update_webpage_image(self, coreImage, t):
         texture = coreImage.texture
         self.ids["WebpageImage"].texture = texture
+        self.ids["WebpageImageLarge"].texture = texture
 
         Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
 
