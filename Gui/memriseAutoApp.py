@@ -69,7 +69,9 @@ class MemriseAutoApp(App):
         Config.write()
 
         mining = self.root.get_screen("MiningScreen")
+
         try:
-            mining.driver.quit()
+            mining.Miner.driver.quit()
         except AttributeError:
             pass
+

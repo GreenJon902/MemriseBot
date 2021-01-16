@@ -28,7 +28,6 @@ class MiningScreen(Screen):
         "webpage_image_update_interval": Config.getint("Gui", "webpage_image_update_interval")
     })
 
-    driver = None
     Miner = None
 
     midLinePos = NumericProperty(0)
@@ -75,12 +74,13 @@ class MiningScreen(Screen):
     def on_enter(self, *args):
         self.Miner = self._Miner(**self.MinerSettings)
 
-        Thread(target=self.Miner.start).start()
+        Thread(target=self.Miner.start, daemon=True).start()
 
     # Miner ------------------------------------------------------------------------------------------------------------
 
     class _Miner:
         do_webpage_image_update = False
+        driver = None
 
         def __init__(self, **kwargs):
             self.__dict__.update(kwargs)
