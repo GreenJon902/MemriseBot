@@ -55,13 +55,13 @@ class MemriseAutoApp(App):
             Logger.info("Logins: Saved")
 
 
-        mining = self.root.get_screen("MiningScreen")
-        mining.usrName = home.ids["UsrNameInput"].text
-        mining.pwdInput = home.ids["PwdInput"].text
-        mining.stopOnlyWhenStopPressed = home.ids["MineUntilOrForSwitch"].active
-        mining.mineUntilPoints = None if home.ids["PointsInput"].text == "" else home.ids["PointsInput"].text
-        mining.mineForTime = None if home.ids["TimeInput"].text == "" else home.ids["TimeInput"].text
-        mining.requireAll = home.ids["RequirementsAll"].state == "down"
+        MinerSettings = self.root.get_screen("MiningScreen").MinerSettings
+        MinerSettings["usrName"] = home.ids["UsrNameInput"].text
+        MinerSettings["pwdInput"] = home.ids["PwdInput"].text
+        MinerSettings["stopOnlyWhenStopPressed"] = home.ids["MineUntilOrForSwitch"].active
+        MinerSettings["mineUntilPoints"] = None if home.ids["PointsInput"].text == "" else home.ids["PointsInput"].text
+        MinerSettings["mineForTime"] = None if home.ids["TimeInput"].text == "" else home.ids["TimeInput"].text
+        MinerSettings["requireAll"] = home.ids["RequirementsAll"].state == "down"
 
         self.root.current = "MiningScreen"
 

@@ -5,7 +5,7 @@ from threading import Thread
 from kivy import Logger
 from kivy.clock import Clock
 from kivy.graphics import Line
-from kivy.properties import StringProperty, BooleanProperty, NumericProperty, OptionProperty
+from kivy.properties import StringProperty, BooleanProperty, NumericProperty, OptionProperty, DictProperty
 from kivy.uix.screenmanager import Screen
 from kivy.core.image import Image as CoreImage
 
@@ -18,37 +18,40 @@ from misc.memriseElements import MemriseElements
 
 
 class MiningScreen(Screen):
-    usrName = StringProperty("")
-    pwdInput = StringProperty("")
-    stopOnlyWhenStopPressed = BooleanProperty(False)
-    mineUntilPoints = NumericProperty(None)
-    mineForTime = NumericProperty(None)
-    requireAll = BooleanProperty(True)
-    mode = OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"])
-    midLinePos = NumericProperty(0)
-    webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
+    MinerSettings = DictProperty({
+        "usrName": StringProperty(""),
+        "pwdInput": StringProperty(""),
+        "mineUntilPoints": NumericProperty(None),
+        "mineForTime": NumericProperty(None),
+        "requireAll": BooleanProperty(True),
+        "mode": OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"]),
+        "webpage_image_update_interval": Config.getint("Gui", "webpage_image_update_interval")
+    })
 
-    do_webpage_image_update = False
     driver = None
+    Miner = None
+
+    midLinePos = NumericProperty(0)
+    stopOnlyWhenStopPressed = BooleanProperty(False)
 
     def on_pre_enter(self, *args):
-        self.mode = Config.get("Mining", "mode")
-        self.webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
+        self.MinerSettings["mode"] = Config.get("Mining", "mode")
+        self.MinerSettings["webpage_image_update_interval"] = Config.getint("Gui", "webpage_image_update_interval")
 
-        self.ids["InfoLabel"].text = "Mining Mode - " + str(self.mode)
+        self.ids["InfoLabel"].text = "Mining Mode - " + str(self.MinerSettings["mode"])
 
         if not self.stopOnlyWhenStopPressed:
             try:
-                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nMine for " + str(int(self.mineForTime)) + \
+                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nMine for " + str(int(self.MinerSettings["mineForTime"])) + \
                                              " minutes"
             except TypeError:
                 pass
             try:
                 self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nStop when " + \
-                                             str(int(self.mineUntilPoints)) + " points reached"
+                                             str(int(self.MinerSettings["mineUntilPoints"])) + " points reached"
             except TypeError:
                 pass
-            self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nRequire All - " + str(self.requireAll)
+            self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nRequire All - " + str(self.MinerSettings["requireAll"])
 
         self.ids["InfoLabelHidden"].text = self.ids["InfoLabel"].text
         self.ids["InfoLabelHidden"].texture_update()
@@ -58,7 +61,6 @@ class MiningScreen(Screen):
 
     def on_size(self, *args, **kwargs):
         self.draw()
-
 
     def on_midLinePos(self, *args, **kwargs):
         self.draw()
@@ -71,70 +73,78 @@ class MiningScreen(Screen):
                  cap="none", joint="none", close=False)
 
     def on_enter(self, *args):
-        Thread(target=self.mine).start()
+        self.Miner = self._Miner(**self.MinerSettings)
 
-    def webpage_image_update(self, coreImage, t):
-        texture = coreImage.texture
-        self.ids["WebpageImage"].texture = texture
+        Thread(target=self.Miner.start).start()
 
-        Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
+    # Miner ------------------------------------------------------------------------------------------------------------
 
-    def webpage_image_updater(self):
-        while self.do_webpage_image_update:
-            t = time.time()
+    class _Miner:
+        do_webpage_image_update = False
 
-            Logger.debug("WebpageImage: Starting image update")
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
 
-            data = io.BytesIO(self.driver.get_screenshot_as_png())
+        def start(self):
+            self.install_dependants()
+            self.set_up()
+            self.do_webpage_image_update = True
+            self.mine()
+            self.do_webpage_image_update = False
 
-            coreImage = CoreImage(data, ext="png")
-            Clock.schedule_once(lambda _: self.webpage_image_update(coreImage, t), 0)
+        def webpage_image_update(self, coreImage, t):
+            texture = coreImage.texture
+            self.ids["WebpageImage"].texture = texture
 
-            time.sleep(self.webpage_image_update_interval - (time.time() - t))
+            Logger.debug("WebpageImage: Finished image update in " + str(time.time() - t))
 
-    def mine(self):
-        try:
-            self.driver.quit()
-        except AttributeError:
-            pass
+        def webpage_image_updater(self):
+            while self.do_webpage_image_update:
+                t = time.time()
 
+                Logger.debug("WebpageImage: Starting image update")
 
-        Logger.info("Miner: Started mining function")
+                data = io.BytesIO(self.driver.get_screenshot_as_png())
 
-        chromedriver_autoinstaller.install()
-        Logger.info("Miner: Chromedriver installed if not already")
+                coreImage = CoreImage(data, ext="png")
+                Clock.schedule_once(lambda _: self.webpage_image_update(coreImage, t), 0)
 
-        chrome_options = ChromeOptions()
-        if Config.getboolean("Gui", "headless"):
-            chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1920,1080")
-        Logger.info("Miner: Chromedriver setup")
+                time.sleep(self.webpage_image_update_interval - (time.time() - t))
 
-        url = Config.get("Mining", "url")
-        driver = webdriver.Chrome(options=chrome_options)
-        driver.get(url)
+        def install_dependants(self):
+            chromedriver_autoinstaller.install()
+            Logger.info("Miner: Chromedriver installed if not already")
 
-        Logger.info("Miner: Loaded " + str(url))
+        def set_up(self):
+            try:
+                self.driver.quit()
+            except AttributeError:
+                pass
 
-        self.driver = driver
-        self.do_webpage_image_update = True
-        webpage_image_updater = Thread(target=self.webpage_image_updater)
-        webpage_image_updater.start()
-        Logger.info("Miner: Started window viewer clock")
+            chromedriver_autoinstaller.install()
+            Logger.info("Miner: Chromedriver installed if not already")
 
-        # Mining ---------------------------------------------------------
+            chrome_options = ChromeOptions()
+            if Config.getboolean("Gui", "headless"):
+                chrome_options.add_argument("--headless")
+            chrome_options.add_argument("--window-size=1920,1080")
+            Logger.info("Miner: Chromedriver setup")
 
+            url = Config.get("Mining", "url")
+            self.driver = webdriver.Chrome(options=chrome_options)
+            self.driver.get(url)
 
-        MemriseElements.get("username_input", driver).send_keys(self.usrName)
-        MemriseElements.get("password_input", driver).send_keys(self.pwdInput)
-        MemriseElements.get("login_submit_button", driver).click()
+            Logger.info("Miner: Loaded " + str(url))
 
-        # Mining ---------------------------------------------------------
+        def mine(self):
+            Logger.info("Miner: Started mining function")
 
-        self.do_webpage_image_update = False
-        Logger.info("Miner: Stopped window viewer clock")
-        Logger.info("Miner: Finished mining function")
+            MemriseElements.get("username_input", self.driver).send_keys(self.usrName)
+            MemriseElements.get("password_input", self.driver).send_keys(self.pwdInput)
+            MemriseElements.get("login_submit_button", self.driver).click()
 
-        time.sleep(5)
+            time.sleep(5)
 
-        driver.close()
+            self.driver.close()
+
+            Logger.info("Miner: Finished mining function")
