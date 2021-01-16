@@ -12,7 +12,7 @@ if __name__ == '__main__':
     os.environ["KIVY_HOME"] = str(os.path.join(user_data_dir, "kivy"))
     os.environ["KCFG_KIVY_LOG_NAME"] = "%y-%m-%d_%_.log"
     os.environ["KCFG_KIVY_LOG_DIR"] = "../logs"
-    os.environ["KCFG_KIVY_LOG_LEVEL"] = "debug"
+    os.environ["KCFG_KIVY_LOG_LEVEL"] = "info"
 
     import kivy
     from kivy.logger import Logger

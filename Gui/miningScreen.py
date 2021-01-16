@@ -96,12 +96,22 @@ class MiningScreen(Screen):
             self.webpage_image_update_interval = Config.getint("Gui", "webpage_image_update_interval")
 
             self.install_dependants()
-            self.set_up()
+            self.setup()
             self.start_webpage_image_updater()
             self.do_webpage_image_update = True
+            self.pre_mine()
+
             if self.mode == "Blatant":
                 self.pre_mine_blatant()
                 self.mine_blatant()
+
+            elif self.mode == "Ghost":
+                self.pre_mine_ghost()
+                self.mine_ghost()
+
+            else:
+                Logger.critical("Miner: Mode \"" + str(self.mode) + "\" is not a valid mode")
+
             self.do_webpage_image_update = False
             self.post_mine()
 
@@ -126,11 +136,14 @@ class MiningScreen(Screen):
                         Logger.warning("WebpageImage: Convert took to long, took " + str(time.time() - t) +
                                        " and it should've took " + str(self.webpage_image_update_interval))
 
+                else:
+                    time.sleep(self.webpage_image_update_interval)
+
         def install_dependants(self):
             chromedriver_autoinstaller.install()
             Logger.info("Miner: Chromedriver installed if not already")
 
-        def set_up(self):
+        def setup(self):
             try:
                 self.driver.quit()
             except AttributeError:
