@@ -37,7 +37,8 @@ class MiningScreen(Screen):
     def on_pre_enter(self, *args):
         if not self.stopOnlyWhenStopPressed:
             try:
-                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "Mine for " + str(int(self.Miner.mineForTime)) + \
+                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "Mine for " + str(
+                    int(self.Miner.mineForTime)) + \
                                              " minutes"
             except TypeError:
                 pass
@@ -164,24 +165,40 @@ class MiningScreen(Screen):
 
             wait_till_page_load(self.driver)
 
-            coursesElements = MemriseElements.get_multiple("courses", self.driver)
-            courses = {}
-            for course in coursesElements:
-                courses[str(MemriseElements.get("course_title", course).get_attribute("title"))] = \
+            home_courses_elements = MemriseElements.get_multiple("courses", self.driver)
+            home_courses = {}
+            for course in home_courses_elements:
+                home_courses[str(MemriseElements.get("course_title", course).get_attribute("title"))] = \
                     MemriseElements.get("course_title", course).find_element(By.TAG_NAME, "a").get_attribute("href")
-            Logger.info("Miner: Located courses and links: \n" + str(pformat(courses)))
+            Logger.info("Miner: Located courses and links: \n" + str(pformat(home_courses)))
 
+
+            self.driver.get(Config.get("URLs", "groups"))
+
+
+            groups_elements = MemriseElements.get_multiple("groups_individual",
+                                                           MemriseElements.get("groups", self.driver))
+            groups_courses = {}
+            for group in groups_elements:
+                groups_courses[str(MemriseElements.get("groups_individual_title", group).text)] = {}
+                for course in MemriseElements.get_multiple("groups_individual_courses", group):
+
+                    groups_courses[str(MemriseElements.get("groups_individual_title", group).text)][MemriseElements.get(
+                        "course_title", course).text] = MemriseElements.get("course_title", course).find_element(
+                        By.TAG_NAME, "a").get_attribute("href")
+
+
+
+            Logger.info("Miner: Located groups, courses and links: \n" + str(pformat(groups_courses)))
 
             Logger.info("Miner: Finished pre mining setup function")
 
-
-
         def mine(self):
-            Logger.info("Miner: Started ghost mining function")
+            Logger.info("Miner: Started mining function")
 
             pass
 
-            Logger.info("Miner: Finished ghost mining function")
+            Logger.info("Miner: Finished mining function")
 
         def post_mine(self):
             self.driver.close()

@@ -33,6 +33,10 @@ def create():
     Config.set("Memrise_Element", "login_submit_button-xpath", "//*[@id=\"__next\"]/div/div[2]/div/form/div[3]/div[1]/button")
     Config.set("Memrise_Element", "courses-class_name", "course-card-container")
     Config.set("Memrise_Element", "course_title-class_name", "title")
+    Config.set("Memrise_Element", "groups-xpath", "//*[@id=\"content\"]/div/div[2]/div[2]/div")
+    Config.set("Memrise_Element", "groups_individual-class_name", "class-view")
+    Config.set("Memrise_Element", "groups_individual_title-class_name", "class-name")
+    Config.set("Memrise_Element", "groups_individual_courses-class_name", "course-view")
 
     Config.set("Misc", "saveLogins", True)
     #Config.set("Misc", "username", "")#for testing
