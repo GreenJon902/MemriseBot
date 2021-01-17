@@ -164,6 +164,10 @@ class MiningScreen(Screen):
             MemriseElements.get("password_input", self.driver).send_keys(self.pwdInput)
             MemriseElements.get("login_submit_button", self.driver).click()
 
+            wait_till_page_load(self.driver)
+
+
+
 
             Logger.info("Miner: Finished pre mining setup function")
 
