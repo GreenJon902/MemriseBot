@@ -149,7 +149,7 @@ class MiningScreen(Screen):
             chrome_options.add_argument("--log-path=" + str(os.path.join(user_data_dir, "chromedriver.log")))
             Logger.info("Miner: Chromedriver setup")
 
-            url = Config.get("Mining", "url")
+            url = Config.get("URLs", "sign_in")
             self.driver = webdriver.Chrome(options=chrome_options)
             self.driver.get(url)
 

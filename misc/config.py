@@ -16,10 +16,14 @@ def create():
     Config.add_section("Mining")
     Config.add_section("Gui")"""
     Config.remove_section("Memrise_Element")
+    Config.remove_section("URLs")
     Config.add_section("Memrise_Element")
+    Config.add_section("URLs")
 
-    Config.set("Mining", "url", "https://app.memrise.com/signin")
     Config.set("Mining", "page_timeout", 10)
+
+    Config.set("URLs", "sign_in", "https://app.memrise.com/signin")
+    Config.set("URLs", "groups", "https://app.memrise.com/groups/")
 
     Config.set("Gui", "webpage_image_update_interval", 0.5)
     #Config.set("Gui", "headless", True)
