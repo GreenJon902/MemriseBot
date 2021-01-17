@@ -1,29 +1,25 @@
 import io
 import os
 import time
-from pprint import pprint, pformat
+from pprint import pformat
 from threading import Thread
 
+import chromedriver_autoinstaller
 from kivy import Logger
 from kivy.clock import Clock
+from kivy.core.image import Image as CoreImage
 from kivy.event import EventDispatcher
 from kivy.graphics import Line
-from kivy.properties import StringProperty, BooleanProperty, NumericProperty, OptionProperty, DictProperty
+from kivy.properties import StringProperty, BooleanProperty, NumericProperty
 from kivy.uix.screenmanager import Screen
-from kivy.core.image import Image as CoreImage
-
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-
-import chromedriver_autoinstaller
-from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.by import By
 
 from misc import user_data_dir
-from misc.webpageFunctions import wait_till_page_load
 from misc.config import Config
 from misc.memriseElements import MemriseElements
+from misc.webpageFunctions import wait_till_page_load
 
 
 class MiningScreen(Screen):
