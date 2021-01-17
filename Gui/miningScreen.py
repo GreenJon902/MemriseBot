@@ -16,6 +16,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import chromedriver_autoinstaller
+from selenium.webdriver.common.alert import Alert
 
 from misc import user_data_dir
 from misc.webpageFunctions import wait_till_page_load
@@ -36,8 +37,6 @@ class MiningScreen(Screen):
         super(MiningScreen, self).__init__(*args, **kwargs)
 
     def on_pre_enter(self, *args):
-        self.ids["InfoLabel"].text = "Mining Mode - " + str(self.Miner.mode)
-
         if not self.stopOnlyWhenStopPressed:
             try:
                 self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nMine for " + str(int(self.Miner.mineForTime)) + \
@@ -89,7 +88,6 @@ class MiningScreen(Screen):
         mineUntilPoints = NumericProperty(None)
         mineForTime = NumericProperty(None)
         requireAll = BooleanProperty(True)
-        mode = OptionProperty(Config.get("Mining", "mode"), options=["Blatant", "Ghost"])
         midLinePos = NumericProperty(0)
         webpage_image_update_interval = Config.getfloat("Gui", "webpage_image_update_interval")
 
@@ -98,7 +96,6 @@ class MiningScreen(Screen):
         Gui = None
 
         def start(self):
-            self.mode = Config.get("Mining", "mode")
             self.webpage_image_update_interval = Config.getfloat("Gui", "webpage_image_update_interval")
 
             self.install_dependants()
@@ -106,18 +103,7 @@ class MiningScreen(Screen):
             self.start_webpage_image_updater()
             self.do_webpage_image_update = True
             self.pre_mine()
-
-            if self.mode == "Blatant":
-                self.pre_mine_blatant()
-                self.mine_blatant()
-
-            elif self.mode == "Ghost":
-                self.pre_mine_ghost()
-                self.mine_ghost()
-
-            else:
-                Logger.critical("Miner: Mode \"" + str(self.mode) + "\" is not a valid mode")
-
+            self.mine()
             self.do_webpage_image_update = False
             self.post_mine()
 
@@ -177,41 +163,13 @@ class MiningScreen(Screen):
             MemriseElements.get("username_input", self.driver).send_keys(self.usrName)
             MemriseElements.get("password_input", self.driver).send_keys(self.pwdInput)
             MemriseElements.get("login_submit_button", self.driver).click()
-            wait_till_page_load(self.driver)
-
-            self.Gui.ids["WebpageImageLarge"].opacity = 1
-            try:
-                self.driver.execute_script("alert('testtest ya');")
-            except WebDriverException:
-                pass
-            time.sleep(10)
 
 
             Logger.info("Miner: Finished pre mining setup function")
 
-        def pre_mine_blatant(self):
-            Logger.info("Miner: Started blatant pre mining setup function")
-
-            pass
-
-            Logger.info("Miner: Finished blatant pre mining setup function")
-
-        def pre_mine_ghost(self):
-            Logger.info("Miner: Started ghost pre mining setup function")
-
-            pass
-
-            Logger.info("Miner: Finished ghost pre mining setup function")
-
-        def mine_blatant(self):
-            Logger.info("Miner: Started blatant mining function")
-
-            time.sleep(5)
-
-            Logger.info("Miner: Finished blatant mining function")
 
 
-        def mine_ghost(self):
+        def mine(self):
             Logger.info("Miner: Started ghost mining function")
 
             pass

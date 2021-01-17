@@ -18,7 +18,6 @@ def create():
     Config.remove_section("Memrise_Element")
     Config.add_section("Memrise_Element")
 
-    #Config.set("Mining", "mode", "Ghost")
     Config.set("Mining", "url", "https://app.memrise.com/signin")
     Config.set("Mining", "page_timeout", 10)
 
