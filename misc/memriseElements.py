@@ -17,5 +17,8 @@ class _MemriseElements:
     def get(self, name, driver):
         return driver.find_element(*self.elements[name])
 
+    def get_multiple(self, name, driver):
+        return driver.find_elements(*self.elements[name])
+
 
 MemriseElements = _MemriseElements()

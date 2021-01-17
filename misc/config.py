@@ -27,6 +27,8 @@ def create():
     Config.set("Memrise_Element", "username_input-id", "username")
     Config.set("Memrise_Element", "password_input-id", "password")
     Config.set("Memrise_Element", "login_submit_button-xpath", "//*[@id=\"__next\"]/div/div[2]/div/form/div[3]/div[1]/button")
+    Config.set("Memrise_Element", "courses-class_name", "course-card-container")
+    Config.set("Memrise_Element", "course_title-class_name", "title")
 
     Config.set("Misc", "saveLogins", True)
     #Config.set("Misc", "username", "")#for testing

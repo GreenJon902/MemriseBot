@@ -1,6 +1,7 @@
 import io
 import os
 import time
+from pprint import pprint, pformat
 from threading import Thread
 
 from kivy import Logger
@@ -17,6 +18,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 
 import chromedriver_autoinstaller
 from selenium.webdriver.common.alert import Alert
+from selenium.webdriver.common.by import By
 
 from misc import user_data_dir
 from misc.webpageFunctions import wait_till_page_load
@@ -39,7 +41,7 @@ class MiningScreen(Screen):
     def on_pre_enter(self, *args):
         if not self.stopOnlyWhenStopPressed:
             try:
-                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nMine for " + str(int(self.Miner.mineForTime)) + \
+                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "Mine for " + str(int(self.Miner.mineForTime)) + \
                                              " minutes"
             except TypeError:
                 pass
@@ -166,7 +168,12 @@ class MiningScreen(Screen):
 
             wait_till_page_load(self.driver)
 
-
+            coursesElements = MemriseElements.get_multiple("courses", self.driver)
+            courses = {}
+            for course in coursesElements:
+                courses[str(MemriseElements.get("course_title", course).get_attribute("title"))] = \
+                    MemriseElements.get("course_title", course).find_element(By.TAG_NAME, "a").get_attribute("href")
+            Logger.info("Miner: Located courses and links: \n" + str(pformat(courses)))
 
 
             Logger.info("Miner: Finished pre mining setup function")
