@@ -1,4 +1,5 @@
 import io
+import json
 import os
 import time
 from pprint import pformat
@@ -11,6 +12,8 @@ from kivy.core.image import Image as CoreImage
 from kivy.event import EventDispatcher
 from kivy.graphics import Line
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty
+from kivy.uix.button import Button
+from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import Screen
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -39,15 +42,16 @@ class MiningScreen(Screen):
             try:
                 self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "Mine for " + str(
                     int(self.Miner.mineForTime)) + \
-                                             " minutes"
+                                             " minutes\n"
             except TypeError:
                 pass
             try:
-                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nStop when " + \
-                                             str(int(self.Miner.mineUntilPoints)) + " points reached"
+                self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "Stop when " + \
+                                             str(int(self.Miner.mineUntilPoints)) + " points reached\n"
             except TypeError:
                 pass
-            self.ids["InfoLabel"].text = self.ids["InfoLabel"].text + "\nRequire All - " + str(self.Miner.requireAll)
+            self.ids["InfoLabel"].text = self.ids[
+                                             "InfoLabel"].text + "Require All - " + str(self.Miner.requireAll) + "\n"
 
         self.ids["InfoLabelHidden"].text = self.ids["InfoLabel"].text
         self.ids["InfoLabelHidden"].texture_update()
@@ -170,7 +174,7 @@ class MiningScreen(Screen):
             for course in home_courses_elements:
                 home_courses[str(MemriseElements.get("course_title", course).get_attribute("title"))] = \
                     MemriseElements.get("course_title", course).find_element(By.TAG_NAME, "a").get_attribute("href")
-            Logger.info("Miner: Located courses and links: \n" + str(pformat(home_courses)))
+            Logger.info("Miner: Located courses and links: \n" + json.dumps(home_courses, indent=4, sort_keys=True))
 
 
             self.driver.get(Config.get("URLs", "groups"))
