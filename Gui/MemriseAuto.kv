@@ -377,15 +377,15 @@ ScreenManager:
                     option: "saveLogins"
 
                 ConfigItem:
-                    type: "option"
-                    title: "Mining Mode"
-                    description: "Settings normal mining and custom mining"
+                    type: "numericSlider"
+                    title: "Max Threads"
+                    description: "The maximum amount of threads to create"
 
-                    options: ["Blatant", "Ghost"]
-                    extra_info: {"Blatant": "Faster but can be detected", "Ghost": "Slower but undetectable"}
+                    sliderMin: 1
+                    sliderMax: 64
 
                     section: "Mining"
-                    option: "mode"
+                    option: "max_threads"
 
                 ConfigItem:
                     type: "bool"

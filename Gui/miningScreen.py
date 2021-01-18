@@ -196,7 +196,7 @@ class MiningScreen(Screen):
         def mine(self):
             Logger.info("Miner: Started mining function")
 
-            pass
+
 
             Logger.info("Miner: Finished mining function")
 
