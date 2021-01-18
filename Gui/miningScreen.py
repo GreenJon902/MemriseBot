@@ -172,6 +172,7 @@ class MiningScreen(Screen):
                     MemriseElements.get("course_title", course).find_element(By.TAG_NAME, "a").get_attribute("href")
             Logger.info("Miner: Located courses and links: \n" + str(pformat(home_courses)))
 
+
             self.driver.get(Config.get("URLs", "groups"))
 
 

@@ -21,7 +21,6 @@ def create():
     Config.add_section("URLs")
 
     Config.set("Mining", "page_timeout", 10)
-    Config.set("Mining", "max_threads", 3)
 
     Config.set("URLs", "sign_in", "https://app.memrise.com/signin")
     Config.set("URLs", "groups", "https://app.memrise.com/groups/")
