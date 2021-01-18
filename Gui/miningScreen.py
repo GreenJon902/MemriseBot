@@ -1,6 +1,7 @@
 import io
 import os
 import time
+from multiprocessing.pool import ThreadPool
 from pprint import pformat
 from threading import Thread
 
@@ -172,22 +173,27 @@ class MiningScreen(Screen):
                     MemriseElements.get("course_title", course).find_element(By.TAG_NAME, "a").get_attribute("href")
             Logger.info("Miner: Located courses and links: \n" + str(pformat(home_courses)))
 
-
             self.driver.get(Config.get("URLs", "groups"))
 
-
+            pool = ThreadPool(processes=Config.getint("Mining", "max_threads"))
             groups_elements = MemriseElements.get_multiple("groups_individual",
                                                            MemriseElements.get("groups", self.driver))
             groups_courses = {}
-            for group in groups_elements:
-                groups_courses[str(MemriseElements.get("groups_individual_title", group).text)] = {}
-                for course in MemriseElements.get_multiple("groups_individual_courses", group):
 
-                    groups_courses[str(MemriseElements.get("groups_individual_title", group).text)][MemriseElements.get(
-                        "course_title", course).text] = MemriseElements.get("course_title", course).find_element(
+            def group_get_courses(_group):
+                groups_courses[str(MemriseElements.get("groups_individual_title", group).text)] = {}
+
+                for _course in MemriseElements.get_multiple("groups_individual_courses", _group):
+                    groups_courses[str(MemriseElements.get("groups_individual_title", _group).text
+                                       )][MemriseElements.get(
+                        "course_title", _course).text] = MemriseElements.get("course_title", _course).find_element(
                         By.TAG_NAME, "a").get_attribute("href")
 
+            for group in groups_elements:
+                pool.apply_async(func=group_get_courses, args=(group))
 
+            pool.close()
+            pool.join()
 
             Logger.info("Miner: Located groups, courses and links: \n" + str(pformat(groups_courses)))
 
@@ -195,8 +201,6 @@ class MiningScreen(Screen):
 
         def mine(self):
             Logger.info("Miner: Started mining function")
-
-
 
             Logger.info("Miner: Finished mining function")
 
