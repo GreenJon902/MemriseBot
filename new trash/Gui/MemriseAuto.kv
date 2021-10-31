@@ -1,0 +1,546 @@
+#:import C kivy.utils.get_color_from_hex
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:set text_font_size "20sp"
+
+ScreenManager:
+    id: SM
+    transition: FadeTransition()
+
+    Home:
+        id: HomeScreen
+        name: "HomeScreen"
+        manager: 'SM'
+
+    Credits:
+        id: CreditsScreen
+        name: "CreditsScreen"
+        manager: 'SM'
+
+    Config:
+        id: ConfigScreen
+        name: "ConfigScreen"
+        manager: 'SM'
+
+    MiningScreen:
+        id: MiningScreen
+        name: "MiningScreen"
+        manager: 'SM'
+
+
+<Home@Screen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    on_kv_post: app.mabyDoPasswordAndLogins(self)
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            height: sp(40) * 2
+            size_hint_y: None
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "Credits"
+                on_release: app.root.current = "CreditsScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot"
+                underline: True
+
+                size_hint_x: 0.8
+
+            Button:
+                text: "Config"
+                on_release: app.root.current = "ConfigScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: sp(30)
+
+            RoundedTextInput:
+                id: UsrNameInput
+                rows: 1
+                font_size: sp(20)
+                multiline: False
+                height: sp(20) * 2
+                size_hint_y: None
+
+                hint_text: "Username or Email"
+
+            Widget:
+                size_hint_y: 0.05
+
+            RoundedTextInput:
+                id: PwdInput
+                rows: 1
+                font_size: sp(20)
+                multiline: False
+                height: sp(20) * 2
+                size_hint_y: None
+
+                password: True
+                hint_text: "Password"
+
+            Widget:
+                size_hint_y: 0.1
+
+            BoxLayout:
+                orientation: "horizontal"
+                height: sp(20) * 2
+                size_hint_y: None
+
+                Label:
+                    id: MineUntilOrForLabel
+
+                    font_size: sp(20)
+                    height: sp(20) * 2
+                    size_hint: None, None
+                    text: "Only stop when stop pressed"
+
+                    width: MineUntilOrForLabel.texture_size[0]
+
+                Switch:
+                    id: MineUntilOrForSwitch
+
+                    on_active: app.switch_changed(*args)
+
+
+                Widget:
+
+            Widget:
+                size_hint_y: 0.1
+
+            BoxLayout:
+                orientation: "horizontal"
+                height: sp(20) * 2
+                size_hint_y: None
+
+                Label:
+                    id: MineUntilLabel
+
+                    font_size: sp(20)
+                    height: sp(20) * 2
+                    size_hint: None, None
+                    text: "Mine until"
+
+                    width: MineUntilLabel.texture_size[0]
+
+
+                Widget:
+                    width:sp(25)
+                    size_hint_x: None
+
+                RoundedTextInput:
+                    id: PointsInput
+                    rows: 1
+                    font_size: sp(20)
+                    multiline: False
+                    height: sp(20) * 2
+                    size_hint_y: None
+
+                    input_filter: "int"
+                    hint_text: "Points"
+
+            Widget:
+                size_hint_y: 0.05
+
+            BoxLayout:
+                orientation: "horizontal"
+                height: sp(20) * 2
+                size_hint_y: None
+
+                Label:
+                    id: MineForLabel
+
+                    font_size: sp(20)
+                    height: sp(20) * 2
+                    size_hint: None, None
+                    text: "Mine for"
+
+                    width: MineForLabel.texture_size[0]
+
+
+                Widget:
+                    width: sp(25)
+                    size_hint_x: None
+
+                RoundedTextInput:
+                    id: TimeInput
+                    rows: 1
+                    font_size: sp(20)
+                    multiline: False
+                    height: sp(20) * 2
+                    size_hint_y: None
+
+                    input_filter: "int"
+                    hint_text: "Minutes"
+
+            Widget:
+                size_hint_y: 0.1
+
+            BoxLayout:
+                id: RequirementsLayout
+
+                orientation: "horizontal"
+                height: sp(20) * 2
+                size_hint_y: None
+
+                ToggleButton:
+                    id: RequirementsAll
+
+                    text: "Stop when all requirements are reached"
+                    group: "requirements"
+
+                    state: "down"
+                    on_press: app.RequirementsChange(*args)
+
+                ToggleButton:
+                    id: RequirementsSingle
+
+                    text: "Stop when 1 of the requirements are reached"
+                    group: "requirements"
+                    on_press: app.RequirementsChange(*args)
+
+
+
+            Widget:
+                size_hint_y: 0.1
+
+
+            Button:
+                text: "Start"
+                on_release: app.start_mining()
+
+
+<Credits@Screen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            height: sp(40) * 2
+            size_hint_y: None
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "Back"
+                on_release: app.root.current = "HomeScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot - Credits"
+                underline: True
+
+                size_hint_x: 0.8
+
+            Button:
+                text: "Config"
+                on_release: app.root.current = "ConfigScreen"
+
+                background_normal: 'Config'
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+        Label:
+            font_size: sp(20)
+            text: "Designed by GreenJon902 \n Programed by GreenJon902 \n Memrise Portal - [u][ref=http://www.crummy.com/software/BeautifulSoup/bs4/]BeautifulSoup4[/ref][/u]"
+            markup: True
+            on_ref_press:
+                import webbrowser
+                webbrowser.open(args[1])
+
+            halign: "center"
+
+        Widget:
+
+
+<Config@Screen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    on_enter: ConfigLayout.on_enter()
+    on_leave: ConfigLayout.on_exit()
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            orientation: "horizontal"
+            height: sp(40) * 2
+            size_hint_y: None
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "Credits"
+                on_release: app.root.current = "CreditsScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot - Config"
+                underline: True
+
+                size_hint_x: 0.8
+
+            Button:
+                text: "Back"
+                on_release: app.root.current = "HomeScreen"
+
+                background_normal: ''
+                background_color: C('#3b88d7')
+
+                size_hint_x: 0.1
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+
+            ConfigLayout:
+                id: ConfigLayout
+
+                size_hint: 1, None
+                height: sum([c.height for c in self.children]) - Spacer.height
+
+                orientation: "vertical"
+
+
+                ConfigItem:
+                    type: "bool"
+                    title: "Save Logins"
+                    description: "Save username and password"
+
+                    section: "Misc"
+                    option: "saveLogins"
+
+
+                ConfigItem:
+                    type: "bool"
+                    title: "Headless"
+                    description: "Run with Chrome open or not open"
+
+                    section: "Gui"
+                    option: "headless"
+
+
+                Widget:
+                    id: Spacer
+
+
+<RoundedTextInput@TextInput>:
+    font_size: sp(14)
+    background_color: 0,0,0,0
+    cursor_color: C('#ffffff')
+    canvas.before:
+        Color:
+            rgba: C('#ffffff')
+    canvas.after:
+        Color:
+            rgb: C('#0f192e')
+        Ellipse:
+            angle_start:180
+            angle_end:360
+            pos:(self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Ellipse:
+            angle_start:360
+            angle_end:540
+            pos: (self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Color:
+            rgba: C('#3f92db')
+        Line:
+            points: self.pos[0] , self.pos[1], self.pos[0] + self.size[0], self.pos[1]
+        Line:
+            points: self.pos[0], self.pos[1] + self.size[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1]
+        Line:
+            ellipse: self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 180, 360
+        Line:
+            ellipse: self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 360, 540
+
+<ConfigItem>:
+    size_hint: 1, None
+    height: sp(text_font_size.replace("sp", "")) * 2 + sp(25)
+
+    padding: "10sp"
+
+    FloatLayout:
+        pos: self.parent.pos
+        size: self.parent.size
+
+        Label:
+            id: Title
+
+            pos_hint: {"x": 0, "top": 1}
+            size_hint: 0.5, None
+            height: text_font_size
+            font_size: text_font_size
+            text_size: self.size
+
+            text: "Title"
+            halign: "left"
+            underline: True
+
+        Label:
+            id: Description
+
+            pos_hint: {"x": 0, "y": 0}
+            size_hint: 0.5, None
+            height: text_font_size
+            font_size: text_font_size
+            text_size: self.size
+
+            text: "Description"
+            halign: "left"
+            underline: False
+
+        BoxLayout:
+            id: EditorHolder
+
+            pos_hint: {"right": 1, "y": 0}
+            size_hint: 0.5, None
+            height: sp(text_font_size.replace("sp", "")) * 2
+
+
+<MiningScreen>:
+    canvas.before:
+        Color:
+            rgba: C('#0f192e')
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            id: Nav
+
+            orientation: "horizontal"
+            height: sp(40) * 2
+            size_hint_y: None
+
+            canvas.before:
+                Color:
+                    rgba: C('#3f92db')
+
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                font_size: sp(40)
+                text: "Memrise Bot - Mining"
+                underline: True
+
+                size_hint_x: 1
+
+        BoxLayout:
+            orientation: "horizontal"
+
+            BoxLayout:
+                id: LabelHolder
+
+                size_hint_x: None
+                padding: sp(10)
+
+                FloatLayout:
+                    Label:
+                        id: InfoLabel
+
+                        pos_hint: {"x": 0, "y": 0}
+                        size_hint: 1, 1
+
+                        font_size: sp(25)
+                        text: ""
+                        halign: "left"
+                        valign: "top"
+                        text_size: self.size
+
+                    Label:
+                        id: InfoLabelHidden
+
+                        pos_hint: {"x": 0, "y": 0}
+                        size_hint: 1, 1
+
+                        font_size: sp(25)
+                        text: ""
+                        halign: "left"
+                        valign: "top"
+                        opacity: 0
+
+
+            Image:
+                id: WebpageImage
+
+    Image:
+        id: WebpageImageLarge
+
+        size_hint: 1, 1
+        pos_hint: {"x":0, "y":0}
+
+        opacity: 0
