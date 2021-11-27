@@ -1,0 +1,123 @@
+#:set image_height 500
+#:set label_height 20
+
+BoxLayout:
+    orientation: "vertical"
+
+    Image:
+        source: "resources/title text.png"
+        size_hint_y: None
+
+        on_width: self.height = self.width * (self.texture.height / self.texture.width)
+
+    ScrollView:
+        BoxLayout:
+            size_hint_y: None
+            height: label_height * 7 + image_height * 6
+
+            canvas.before:
+                Color:
+                    rgb: 0.1, 0.1, 0.1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            orientation: "vertical"
+
+            size_hint_y: None
+            padding: 10, 0, 0, 0
+
+            orientation: "vertical"
+
+
+            Label:
+                text: "1. Navigate to the course you would like to bot"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+
+            Label:
+                text: "2. Click on the level you would like to bot"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+            Image:
+                source: "resources/tutorial 1.png"
+                allow_stretch: True
+                size_hint: None, None
+                width: self.parent.width
+                height: image_height
+
+            Label:
+                text: "3. Click the ignore button"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+            Image:
+                source: "resources/tutorial 2.png"
+                allow_stretch: True
+                size_hint: None, None
+                width: self.parent.width
+                height: image_height
+
+            Label:
+                text: "4. Click all"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+            Image:
+                source: "resources/tutorial 3.png"
+                allow_stretch: True
+                size_hint: None, None
+                width: self.parent.width
+                height: image_height
+
+            Label:
+                text: "5. Uncheck one of them, it doesn't matter which"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+            Image:
+                source: "resources/tutorial 4.png"
+                allow_stretch: True
+                size_hint: None, None
+                width: self.parent.width
+                height: image_height
+
+            Label:
+                text: "6. Scroll down and click save"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+            Image:
+                source: "resources/tutorial 5.png"
+                allow_stretch: True
+                size_hint: None, None
+                width: self.parent.width
+                height: image_height
+
+            Label:
+                text: "7. The level should now look like this"
+                halign: "left"
+                text_size: self.width, self.height
+                size_hint_y: None
+                height: label_height
+
+            Image:
+                source: "resources/tutorial 6.png"
+                allow_stretch: True
+                size_hint: None, None
+                width: self.parent.width
+                height: image_height

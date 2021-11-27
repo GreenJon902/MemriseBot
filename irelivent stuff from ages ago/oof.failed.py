@@ -1,6 +1,6 @@
-import sys
 import time
 from tkinter import Tk, Label, Button, Text, DISABLED, NORMAL
+
 import pyautogui
 
 
