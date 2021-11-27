@@ -1,8 +1,12 @@
+import sys
 from tkinter import Tk, Label, Button, Text
-import time
-import selenium.webdriver
+
 import chromedriver_autoinstaller
+import selenium.webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class id:
@@ -55,34 +59,41 @@ trans = str(t3.get(1.0, "end-1c"))
 window.destroy()
 
 # -----------------------------------------------------------------------------------------------
+print("Getting ulr that review button goes too")
 
-isDone = id()
-
-window = Tk()
-Label(window, text="Running!").pack()
-Button(window, text="Stop", command=isDone.do).pack()
-
-
+path = None
 for element in driver.find_elements_by_tag_name("a"):
     if "Review" in element.text:
-        print(element.text)
         path = element.get_attribute("href")
-
         break
 
+if path is None:
+    print("Failed")
+    print("Could not get attribute href from element with text \"review\", maybe your on the wrong page, the url should end with \"name of the course/level number/\"!\ne.g.german/4")
+    sys.exit()
 
-
+print("Running")
 while not isDone.done:
-
-    window.update()
-
     try:
         driver.get(path)
-        #time.sleep(1)
-        driver.find_element_by_class_name("typing-type-here").send_keys(trans)
-        #time.sleep(0.1)
-        driver.find_element_by_class_name("next-icon").click()
-        print("Worked")
+
+
+        WebDriverWait(driver, 1000).until(
+            expected_conditions.presence_of_element_located((By.XPATH,
+                                                             "/html/body/div[4]/div[3]/div/div/div[4]/input")))
+        driver.find_element_by_xpath("/html/body/div[4]/div[3]/div/div/div[4]/input").send_keys(trans)
+
+
+        WebDriverWait(driver, 1000).until(
+            expected_conditions.presence_of_element_located((By.XPATH,
+                                                             "/html/body/div[4]/div[3]/div/div/div[1]/button/span")))
+        driver.find_element_by_xpath("/html/body/div[4]/div[3]/div/div/div[1]/button/span").click()
+
+
+        WebDriverWait(driver, 1000).until(
+            expected_conditions.presence_of_element_located((By.XPATH,
+                                                             "/html/body/div[5]/div[3]/div/div/div[3]/span[2]")))
+
 
 
     except Exception as e:
