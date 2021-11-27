@@ -3,7 +3,6 @@ from kivy.animation import Animation
 from kivy.app import App
 from kivy.core.window import Window
 
-from Gui.miningScreen import MiningScreen
 from misc import encode, decode
 from misc.config import Config
 

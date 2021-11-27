@@ -2,7 +2,6 @@ import io
 import json
 import os
 import time
-from pprint import pformat
 from threading import Thread
 
 import chromedriver_autoinstaller
@@ -12,18 +11,14 @@ from kivy.core.image import Image as CoreImage
 from kivy.event import EventDispatcher
 from kivy.graphics import Line
 from kivy.properties import StringProperty, BooleanProperty, NumericProperty
-from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.common.by import By
-
 from misc import user_data_dir
 from misc.config import Config
 from misc.memriseElements import MemriseElements
 from misc.webpageFunctions import wait_till_page_load
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.common.by import By
 
 
 class MiningScreen(Screen):

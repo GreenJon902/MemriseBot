@@ -1,14 +1,13 @@
 # Pulled from GreenJon902/md5-unhasher
 
-from kivy.properties import OptionProperty, StringProperty, ObjectProperty, NumericProperty, ListProperty, DictProperty
 from kivy.logger import Logger
+from kivy.properties import OptionProperty, StringProperty, ObjectProperty, NumericProperty, ListProperty, DictProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.slider import Slider
 from kivy.uix.switch import Switch
 from kivy.uix.textinput import TextInput
-
 from misc.config import Config
 from misc.functions import emptyFunction
 

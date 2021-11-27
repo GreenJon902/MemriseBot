@@ -1,7 +1,7 @@
+import os
 import pathlib
 import sys
 from multiprocessing import freeze_support
-import os
 
 if __name__ == '__main__':
     freeze_support()
@@ -14,7 +14,6 @@ if __name__ == '__main__':
     os.environ["KCFG_KIVY_LOG_DIR"] = "../logs"
     os.environ["KCFG_KIVY_LOG_LEVEL"] = "info"
 
-    import kivy
     from kivy.logger import Logger
 
     if not os.path.exists(user_data_dir):
@@ -31,8 +30,6 @@ if __name__ == '__main__':
     Logger.info("UserDataDir: UserDataDir at \"" + str(user_data_dir) + "\"")
 
     from misc import *
-    from Gui import *
-
 
     app = MemriseAutoApp()
     app.run()

@@ -69,7 +69,8 @@ for element in driver.find_elements_by_tag_name("a"):
 
 if path is None:
     print("Failed")
-    print("Could not get attribute href from element with text \"review\", maybe your on the wrong page, the url should end with \"name of the course/level number/\"!\ne.g.german/4")
+    print("Could not get attribute href from element with text \"review\", maybe your on the wrong page, "
+          "the url should end with \"name of the course/level number/\"!\ne.g.german/4")
     sys.exit()
 
 print("Running")
