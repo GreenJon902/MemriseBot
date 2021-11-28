@@ -1,4 +1,6 @@
 import sys
+import threading
+import time
 from threading import Thread
 
 import chromedriver_autoinstaller
@@ -8,6 +10,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
+lock = threading.Lock()
+
 
 class Bot:
     should_run = False
@@ -16,15 +20,14 @@ class Bot:
     driver: selenium.webdriver.Chrome
     translation: str
 
-    def __init__(self, callback):
-        self.callback = callback
-
+    def __init__(self):
         Thread(target=self.chrome_handler).start()
 
     def start_bot(self, translation):
-        self.callback("log", "Starting")
+        lock.acquire()
         self.translation = translation
         self.should_run = True
+        lock.acquire()
 
     def end_bot(self):
         self.should_run = False
@@ -44,6 +47,7 @@ class Bot:
         self.driver.get("https://www.memrise.com/home/")
 
         while not self.need_close:
+            lock.acquire()
             if self.should_run:
                 path = None
                 for element in self.driver.find_elements_by_tag_name("a"):
@@ -77,5 +81,7 @@ class Bot:
 
                 except Exception as e:
                     print("failed", e)
+            lock.release()
+            time.sleep(1)
 
         self.driver.close()
